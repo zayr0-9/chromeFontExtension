@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Font Changer</title>
+    <style>
+      /* Light mode default */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0px;
+        width: 250px;
+      }
+
+      .container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      label {
+        font-size: 1em;
+        color: #666;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      select {
+        width: 100%;
+        padding: 10px;
+        font-size: 1em;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+      }
+
+      button {
+        background-color: #1e90ff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1em;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      button:hover {
+        background-color: #007acc;
+      }
+
+      /* Dark mode styles */
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #1e1e1e;
+          color: #f1f1f1;
+        }
+
+        .container {
+          background-color: #2b2b2b;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+          color: #f1f1f1;
+        }
+
+        label {
+          color: #cccccc;
+        }
+
+        select {
+          background-color: #3a3a3a;
+          border: 1px solid #555;
+          color: #f1f1f1;
+        }
+
+        button {
+          background-color: #1e90ff;
+        }
+
+        button:hover {
+          background-color: #007acc;
+        }
+        #fontSize {
+          margin-bottom: 5px;
+        }
+        #resetFontSize {
+          width: 60%;
+        }
+        input {
+          width: 80%;
+          padding: 10px;
+          font-size: 1em;
+          border-radius: 5px;
+          border: 1px solid #ccc;
+          margin-bottom: 20px;
+          background-color: #3a3a3a;
+          color: #f1f1f1;
+        }
+
+        input::placeholder {
+          color: #f1f1f1;
+          opacity: 1; /* Ensures the color is not faded */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Font Changer</h2>
+      <label for="font">Choose Font:</label>
+      <select id="fontSelect"></select>
+
+      <!-- New slider to modify font size -->
+      <label for="fontSize">Font Size:</label>
+      <input type="range" id="fontSize" min="10" max="50" value="16" />
+      <span id="fontSizeValue">16px</span>
+      <!-- This will display the current font size value -->
+      <br /><br />
+
+      <!-- New button to reset font size to default -->
+      <button id="resetFontSize">Reset Font Size</button>
+      <br /><br />
+
+      <!-- New input field for user to add a Google Fonts URL -->
+      <label for="customFontLink">Add Google Font URL:</label>
+      <input
+        type="text"
+        id="customFontLink"
+        placeholder="Paste Google Font URL here"
+      />
+      <button id="addFont">Add Font</button>
+      <br /><br />
+
+      <button id="changeFont">Change Font</button>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
