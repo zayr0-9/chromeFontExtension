@@ -52,11 +52,41 @@
         font-size: 1em;
         border-radius: 5px;
         cursor: pointer;
-        width: 100%;
+        margin: 5px;
       }
 
       button:hover {
         background-color: #007acc;
+      }
+
+      /* Adjust the plus and minus buttons */
+      #decreaseFontSize,
+      #increaseFontSize {
+        width: 40px;
+        padding: 10px 0;
+      }
+
+      /* Display scaling factor */
+      #scalingFactorValue {
+        display: inline-block;
+        margin-left: 10px;
+        font-size: 1em;
+        color: #333;
+      }
+
+      /* Adjust reset button width */
+      #resetFontSize {
+        width: 100%;
+      }
+
+      /* Input field styles */
+      input[type="text"] {
+        width: 80%;
+        padding: 10px;
+        font-size: 1em;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
       }
 
       /* Dark mode styles */
@@ -92,19 +122,8 @@
         button:hover {
           background-color: #007acc;
         }
-        #fontSize {
-          margin-bottom: 5px;
-        }
-        #resetFontSize {
-          width: 60%;
-        }
-        input {
-          width: 80%;
-          padding: 10px;
-          font-size: 1em;
-          border-radius: 5px;
-          border: 1px solid #ccc;
-          margin-bottom: 20px;
+
+        input[type="text"] {
           background-color: #3a3a3a;
           color: #f1f1f1;
         }
@@ -119,21 +138,10 @@
   <body>
     <div class="container">
       <h2>Font Changer</h2>
-      <label for="font">Choose Font:</label>
+      <label for="fontSelect">Choose Font:</label>
       <select id="fontSelect"></select>
 
-      <!-- New slider to modify font size -->
-      <label for="fontSize">Font Size:</label>
-      <input type="range" id="fontSize" min="10" max="50" value="16" />
-      <span id="fontSizeValue">16px</span>
-      <!-- This will display the current font size value -->
-      <br /><br />
-
-      <!-- New button to reset font size to default -->
-      <button id="resetFontSize">Reset Font Size</button>
-      <br /><br />
-
-      <!-- New input field for user to add a Google Fonts URL -->
+      <!-- Custom Font Input -->
       <label for="customFontLink">Add Google Font URL:</label>
       <input
         type="text"

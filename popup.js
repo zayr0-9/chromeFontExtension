@@ -1,16 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
   const fontSelect = document.getElementById("fontSelect");
-  const fontSizeSlider = document.getElementById("fontSize");
-  const fontSizeValue = document.getElementById("fontSizeValue");
-  const resetFontSizeButton = document.getElementById("resetFontSize");
   const customFontInput = document.getElementById("customFontLink");
   const addFontButton = document.getElementById("addFont");
   const errorMessage = document.createElement("p");
   errorMessage.style.color = "red";
   errorMessage.style.display = "none";
   document.body.appendChild(errorMessage);
-
-  const defaultFontSize = 16; // Default font size
 
   // Get the current tab's ID
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -43,35 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
             fontSelect.value = data.selectedFont;
           }
 
-          // Load the font size for this tab from session storage
-          const fontSizeKey = `fontSize_${tabId}`;
-          chrome.storage.session.get([fontSizeKey], function (sessionData) {
-            const currentFontSize = sessionData[fontSizeKey] || defaultFontSize;
-            fontSizeSlider.value = currentFontSize;
-            fontSizeValue.textContent = `${currentFontSize}px`;
-
-            // Apply the current font and tab-specific size to the active tab
-            adjustFontInRealTime(fontSelect.value, currentFontSize, tabId);
-          });
-        }
-      );
-    });
-
-    // Real-time font size update when the slider is moved
-    fontSizeSlider.addEventListener("input", function () {
-      const selectedFontSize = fontSizeSlider.value;
-      fontSizeValue.textContent = `${selectedFontSize}px`;
-
-      const selectedFont = fontSelect.value;
-      // Apply the font size in real time for the current tab
-      adjustFontInRealTime(selectedFont, selectedFontSize, tabId);
-
-      // Save the font size specific to the current tab in session storage
-      const fontSizeKey = `fontSize_${tabId}`;
-      chrome.storage.session.set(
-        { [fontSizeKey]: selectedFontSize },
-        function () {
-          console.log(`Saved font size ${selectedFontSize}px for tab ${tabId}`);
+          // Apply the current font to the active tab
+          applyFontInRealTime(fontSelect.value, tabId);
         }
       );
     });
@@ -83,33 +51,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedFont = fontSelect.value;
 
         // Save the selected font in local storage (shared across all tabs)
-        chrome.storage.local.set({ selectedFont: selectedFont }, function () {
-          console.log(`Saved global font: ${selectedFont}`);
-        });
+        chrome.storage.local.set({ selectedFont: selectedFont });
 
-        // Apply the selected font and font size to the current tab
-        const selectedFontSize = fontSizeSlider.value;
-        adjustFontInRealTime(selectedFont, selectedFontSize, tabId);
+        // Apply the selected font to the current tab
+        applyFontInRealTime(selectedFont, tabId);
       });
-
-    // Reset the font size to default for the current tab
-    resetFontSizeButton.addEventListener("click", function () {
-      fontSizeSlider.value = defaultFontSize;
-      fontSizeValue.textContent = `${defaultFontSize}px`;
-
-      // Save the default font size for this tab in session storage
-      const fontSizeKey = `fontSize_${tabId}`;
-      chrome.storage.session.set(
-        { [fontSizeKey]: defaultFontSize },
-        function () {
-          console.log(`Reset to default font size for tab ${tabId}`);
-        }
-      );
-
-      // Apply the default font size to the current tab
-      const selectedFont = fontSelect.value;
-      adjustFontInRealTime(selectedFont, defaultFontSize, tabId);
-    });
   });
 
   // Handle "Add Font" button click
@@ -146,30 +92,30 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       // Update storage with the new custom font
-      chrome.storage.local.set({ customFonts: customFonts }, function () {
-        console.log(`Custom font ${fontName} added and saved.`);
-      });
+      chrome.storage.local.set({ customFonts: customFonts });
     });
 
     // Clear the input field after adding
     customFontInput.value = "";
   });
 
-  // Function to inject the current font and size into the active tab
-  function adjustFontInRealTime(font, size, tabId) {
+  // Function to inject the current font into the active tab
+  function applyFontInRealTime(font, tabId) {
     chrome.scripting.executeScript({
       target: { tabId: tabId },
-      function: (font, size) => {
-        // Remove the previous style if exists
+      function: (font) => {
+        // Remove the previous style if it exists
         let style = document.getElementById("font-changer-style");
         if (!style) {
           style = document.createElement("style");
           style.id = "font-changer-style";
           document.head.appendChild(style);
         }
-        style.innerHTML = `* { font-family: '${font}' !important; font-size: ${size}px !important; }`;
+        style.innerHTML = `  body, p, h1, h2, h3 {
+                font-family: '${font}' !important;
+              }`;
       },
-      args: [font, size],
+      args: [font],
     });
   }
 
