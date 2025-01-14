@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
   errorMessage.style.display = "none";
   document.body.appendChild(errorMessage);
 
+  // Font Awesome Unicode range to exclude (e.g., \f000 - \f2ff)
+  const fontAwesomeUnicodeRange = /^\\f[0-9a-fA-F]{3}$/;
+
   // Get the current tab's ID
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const tabId = tabs[0].id;
@@ -76,6 +79,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Extract the font name from the URL (e.g., "family=Roboto" -> "Roboto")
     const fontName = fontLink.match(/family=([^&]*)/)[1].replace(/\+/g, " ");
+
+    // Check for conflicts with Font Awesome Unicode range
+    if (fontAwesomeUnicodeRange.test(fontName)) {
+      errorMessage.textContent =
+        "Font conflicts with Font Awesome icons. Please choose a different font.";
+      errorMessage.style.display = "block";
+      return;
+    }
 
     // Create a new option in the dropdown for this custom font
     const option = document.createElement("option");
